@@ -1,6 +1,6 @@
 # Artom monitoring deployment
 
-The `codex/vercel-monitoring-fix` branch contains Artom-specific deployment fixes;
+The `development` branch contains Artom-specific deployment fixes;
 `master` remains the upstream baseline (Umami 3.4.1).
 
 ## What this branch changes
@@ -21,7 +21,7 @@ The `codex/vercel-monitoring-fix` branch contains Artom-specific deployment fixe
 Apply these settings to the **umami** project, not the **monitoring** project:
 
 1. After publishing the branch to GitHub, set Production Branch to
-   `codex/vercel-monitoring-fix`. Keep `master` for upstream updates.
+   `development`. Keep `master` for upstream updates.
 2. Use the Install Command and Build Command from `vercel.json`; remove dashboard
    overrides that bypass them. The build command already sets `BUILD_GEO=1`.
    Remove `SKIP_BUILD_GEO` if configured, including the string `false` (upstream
