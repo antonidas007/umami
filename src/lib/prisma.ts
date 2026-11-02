@@ -866,8 +866,18 @@ function getClient() {
   }
 
   const schema = getSchema();
+  // Each Vercel instance owns a pool; pg's default can exhaust a small database role.
+  const max = Number(process.env.DATABASE_POOL_MAX || (process.env.VERCEL ? '2' : '10'));
+  if (!Number.isSafeInteger(max) || max < 1 || max > 100) {
+    throw new Error('DATABASE_POOL_MAX must be an integer between 1 and 100.');
+  }
+  const poolOptions = {
+    max,
+    connectionTimeoutMillis: process.env.VERCEL ? 5000 : 0,
+    idleTimeoutMillis: 10000,
+  };
 
-  const baseAdapter = new PrismaPg({ connectionString: url }, { schema });
+  const baseAdapter = new PrismaPg({ connectionString: url, ...poolOptions }, { schema });
 
   const baseClient = new PrismaClient({
     adapter: baseAdapter,
@@ -885,7 +895,7 @@ function getClient() {
     return baseClient;
   }
 
-  const replicaAdapter = new PrismaPg({ connectionString: replicaUrl }, { schema });
+  const replicaAdapter = new PrismaPg({ connectionString: replicaUrl, ...poolOptions }, { schema });
 
   const replicaClient = new PrismaClient({
     adapter: replicaAdapter,

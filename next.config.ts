@@ -223,6 +223,14 @@ export default withNextIntl({
     selfRecord,
   },
   basePath,
+  // Collectors need the local GeoLite database when provider location headers cannot be used.
+  outputFileTracingIncludes: {
+    '/api/send': ['./geo/GeoLite2-City.mmdb'],
+    '/api/record': ['./geo/GeoLite2-City.mmdb'],
+    '/api/batch': ['./geo/GeoLite2-City.mmdb'],
+    '/p/*': ['./geo/GeoLite2-City.mmdb'],
+    '/q/*': ['./geo/GeoLite2-City.mmdb'],
+  },
   output: isVercel ? undefined : 'standalone',
   typescript: {
     ignoreBuildErrors: true,
